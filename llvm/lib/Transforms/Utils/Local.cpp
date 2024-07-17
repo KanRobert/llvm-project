@@ -2965,7 +2965,7 @@ BasicBlock *llvm::changeToInvokeAndSplitBasicBlock(CallInst *CI,
 
 static bool markAliveBlocks(Function &F,
                             SmallPtrSetImpl<BasicBlock *> &Reachable,
-                            DomTreeUpdater *DTU = nullptr) {
+                            DomTreeUpdater *DTU = nullptr, bool RunInCodeGen = false) {
   SmallVector<BasicBlock*, 128> Worklist;
   BasicBlock *BB = &F.front();
   Worklist.push_back(BB);
@@ -2973,6 +2973,43 @@ static bool markAliveBlocks(Function &F,
   bool Changed = false;
   do {
     BB = Worklist.pop_back_val();
+    Instruction *Terminator = BB->getTerminator();
+
+    // Note that this specialization for CodeGen is required to paper over
+    // problems in the code generator (primarily live variables and its clients)
+    // which doesn't really have any well defined semantics for unreachable
+    // code, e.g.
+    //
+    // \code
+    //
+    // define ptr @append() gc "ocaml" {
+    // entry:
+    //   switch i32 0, label %L2 [i32 0, label %L1]
+    // L1:
+    //   %var8 = alloca ptr
+    //   call void @llvm.gcroot(ptr %var8,ptr null)
+    //   br label %L3
+    // L2:
+    //   call ccc void @oread_runtime_casenotcovered()
+    //   unreachable
+    // L3:
+    //   ret ptr null
+    // }
+    //
+    // declare ccc void @oread_runtime_casenotcovered()
+    // declare void @llvm.gcroot(ptr,ptr)
+    //
+    // \endcode
+    //
+    // Hence, we performs a simple depth first traversal of the CFG and only
+    // mark unvisited blocks unreachable.
+    //
+    // In particular, the instruction selectors for various targets should just
+    // not generate code for unreachable blocks. Until LLVM has a more
+    // systematic way of defining instruction selectors, however, we cannot
+    // really expect them to handle additional complexity.
+    if (RunInCodeGen)
+      goto DFS;
 
     // Do a quick scan of the basic block, turning any obviously unreachable
     // instructions into LLVM unreachable insts.  The instruction combining pass
@@ -3052,7 +3089,6 @@ static bool markAliveBlocks(Function &F,
       }
     }
 
-    Instruction *Terminator = BB->getTerminator();
     if (auto *II = dyn_cast<InvokeInst>(Terminator)) {
       // Turn invokes that call 'nounwind' functions into ordinary calls.
       Value *Callee = II->getCalledOperand();
@@ -3154,6 +3190,7 @@ static bool markAliveBlocks(Function &F,
     }
 
     Changed |= ConstantFoldTerminator(BB, true, nullptr, DTU);
+  DFS:
     for (BasicBlock *Successor : successors(BB))
       if (Reachable.insert(Successor).second)
         Worklist.push_back(Successor);
@@ -3200,9 +3237,9 @@ Instruction *llvm::removeUnwindEdge(BasicBlock *BB, DomTreeUpdater *DTU) {
 /// if they are in a dead cycle.  Return true if a change was made, false
 /// otherwise.
 bool llvm::removeUnreachableBlocks(Function &F, DomTreeUpdater *DTU,
-                                   MemorySSAUpdater *MSSAU) {
+                                   MemorySSAUpdater *MSSAU, bool RunInCodeGen) {
   SmallPtrSet<BasicBlock *, 16> Reachable;
-  bool Changed = markAliveBlocks(F, Reachable, DTU);
+  bool Changed = markAliveBlocks(F, Reachable, DTU, RunInCodeGen);
 
   // If there are unreachable blocks in the CFG...
   if (Reachable.size() == F.size())

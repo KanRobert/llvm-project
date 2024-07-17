@@ -856,13 +856,10 @@ void TargetPassConfig::addIRPasses() {
       !DisableAtExitBasedGlobalDtorLowering)
     addPass(createLowerGlobalDtorsLegacyPass());
 
-  // Try to simplify the CFG before CodeGenPrepare, considering both of the cost
-  // of instruction and CFG may have changed.
+  // Make sure that no unreachable blocks are instruction selected.
   if (getOptLevel() != CodeGenOptLevel::None && !DisableCodeGenSimplifyCFG)
-    addPass(createCFGSimplificationPass(
-        SimplifyCFGOptions()
-            .tailMergeBlocksWithSimilarFunctionTerminators(false)
-            .iterativelySimplifyCFG(false)));
+    addPass(
+        createCFGSimplificationPass(SimplifyCFGOptions().runInCodeGen(true)));
 
   // Prepare expensive constants for SelectionDAG.
   if (getOptLevel() != CodeGenOptLevel::None && !DisableConstantHoisting)

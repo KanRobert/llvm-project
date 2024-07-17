@@ -269,19 +269,19 @@ static bool simplifyFunctionCFGImpl(Function &F, const TargetTransformInfo &TTI,
                                     const SimplifyCFGOptions &Options) {
   DomTreeUpdater DTU(DT, DomTreeUpdater::UpdateStrategy::Eager);
 
-  bool EverChanged = removeUnreachableBlocks(F, DT ? &DTU : nullptr);
+  bool EverChanged = removeUnreachableBlocks(F, DT ? &DTU : nullptr, nullptr,
+                                             Options.RunInCodeGen);
+
+  // Only need to remove unreachable blocks in codegen.
+  if (Options.RunInCodeGen)
+    return EverChanged;
+
   EverChanged |=
-      Options.TailMergeBlocksWithSimilarFunctionTerminators &&
       tailMergeBlocksWithSimilarFunctionTerminators(F, DT ? &DTU : nullptr);
-  EverChanged |= Options.IterativelySimplifyCFG &&
-                 iterativelySimplifyCFG(F, TTI, DT ? &DTU : nullptr, Options);
+  EverChanged |= iterativelySimplifyCFG(F, TTI, DT ? &DTU : nullptr, Options);
 
   // If neither pass changed anything, we're done.
   if (!EverChanged)
-    return false;
-  // If only need to remove unreachable blocks, we're done.
-  if (!Options.TailMergeBlocksWithSimilarFunctionTerminators &&
-      !Options.IterativelySimplifyCFG)
     return false;
 
   // iterativelySimplifyCFG can (rarely) make some loops dead.  If this happens,
@@ -293,8 +293,7 @@ static bool simplifyFunctionCFGImpl(Function &F, const TargetTransformInfo &TTI,
     return true;
 
   do {
-    EverChanged = Options.IterativelySimplifyCFG &&
-                  iterativelySimplifyCFG(F, TTI, DT ? &DTU : nullptr, Options);
+    EverChanged = iterativelySimplifyCFG(F, TTI, DT ? &DTU : nullptr, Options);
     EverChanged |= removeUnreachableBlocks(F, DT ? &DTU : nullptr);
   } while (EverChanged);
 
