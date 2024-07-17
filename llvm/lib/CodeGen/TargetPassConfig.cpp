@@ -47,6 +47,7 @@
 #include "llvm/Target/CGPassBuilderOption.h"
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Transforms/Scalar.h"
+#include "llvm/Transforms/Scalar/SimplifyCFG.h"
 #include "llvm/Transforms/Utils.h"
 #include <cassert>
 #include <optional>
@@ -95,6 +96,8 @@ static cl::opt<bool> DisableLSR("disable-lsr", cl::Hidden,
     cl::desc("Disable Loop Strength Reduction Pass"));
 static cl::opt<bool> DisableConstantHoisting("disable-constant-hoisting",
     cl::Hidden, cl::desc("Disable ConstantHoisting"));
+static cl::opt<bool> DisableCodeGenSimplifyCFG("disable-codegen-simplifycfg",
+    cl::Hidden, cl::desc("Disable SimplifyCFG in CodenGen"));
 static cl::opt<bool> DisableCGP("disable-cgp", cl::Hidden,
     cl::desc("Disable Codegen Prepare"));
 static cl::opt<bool> DisableCopyProp("disable-copyprop", cl::Hidden,
@@ -853,8 +856,13 @@ void TargetPassConfig::addIRPasses() {
       !DisableAtExitBasedGlobalDtorLowering)
     addPass(createLowerGlobalDtorsLegacyPass());
 
-  // Make sure that no unreachable blocks are instruction selected.
-  addPass(createUnreachableBlockEliminationPass());
+  // Try to simplify the CFG before CodeGenPrepare, considering both of the cost
+  // of instruction and CFG may have changed.
+  if (getOptLevel() != CodeGenOptLevel::None && !DisableCodeGenSimplifyCFG)
+    addPass(createCFGSimplificationPass(
+        SimplifyCFGOptions()
+            .tailMergeBlocksWithSimilarFunctionTerminators(false)
+            .iterativelySimplifyCFG(false)));
 
   // Prepare expensive constants for SelectionDAG.
   if (getOptLevel() != CodeGenOptLevel::None && !DisableConstantHoisting)

@@ -30,6 +30,8 @@ struct SimplifyCFGOptions {
   bool SinkCommonInsts = false;
   bool SimplifyCondBranch = true;
   bool SpeculateBlocks = true;
+  bool TailMergeBlocksWithSimilarFunctionTerminators = true;
+  bool IterativelySimplifyCFG = true;
 
   AssumptionCache *AC = nullptr;
 
@@ -73,6 +75,14 @@ struct SimplifyCFGOptions {
 
   SimplifyCFGOptions &speculateBlocks(bool B) {
     SpeculateBlocks = B;
+    return *this;
+  }
+  SimplifyCFGOptions &tailMergeBlocksWithSimilarFunctionTerminators(bool B) {
+    TailMergeBlocksWithSimilarFunctionTerminators = B;
+    return *this;
+  }
+  SimplifyCFGOptions &iterativelySimplifyCFG(bool B) {
+    IterativelySimplifyCFG = B;
     return *this;
   }
 };
