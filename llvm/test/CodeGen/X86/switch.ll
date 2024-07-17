@@ -1915,70 +1915,74 @@ define void @left_leaning_weight_balanced_tree(i32 %x) {
 ; NOOPT-NEXT:    movl %edi, {{[-0-9]+}}(%r{{[sb]}}p) # 4-byte Spill
 ; NOOPT-NEXT:    testl %edi, %edi
 ; NOOPT-NEXT:    je .LBB19_1
-; NOOPT-NEXT:    jmp .LBB19_9
-; NOOPT-NEXT:  .LBB19_9: # %entry
-; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $10, %eax
-; NOOPT-NEXT:    je .LBB19_2
 ; NOOPT-NEXT:    jmp .LBB19_10
 ; NOOPT-NEXT:  .LBB19_10: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $20, %eax
-; NOOPT-NEXT:    je .LBB19_3
+; NOOPT-NEXT:    subl $10, %eax
+; NOOPT-NEXT:    je .LBB19_2
 ; NOOPT-NEXT:    jmp .LBB19_11
 ; NOOPT-NEXT:  .LBB19_11: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $30, %eax
-; NOOPT-NEXT:    je .LBB19_4
+; NOOPT-NEXT:    subl $20, %eax
+; NOOPT-NEXT:    je .LBB19_3
 ; NOOPT-NEXT:    jmp .LBB19_12
 ; NOOPT-NEXT:  .LBB19_12: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $40, %eax
-; NOOPT-NEXT:    je .LBB19_5
+; NOOPT-NEXT:    subl $30, %eax
+; NOOPT-NEXT:    je .LBB19_4
 ; NOOPT-NEXT:    jmp .LBB19_13
 ; NOOPT-NEXT:  .LBB19_13: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $50, %eax
-; NOOPT-NEXT:    je .LBB19_6
+; NOOPT-NEXT:    subl $40, %eax
+; NOOPT-NEXT:    je .LBB19_5
 ; NOOPT-NEXT:    jmp .LBB19_14
 ; NOOPT-NEXT:  .LBB19_14: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $60, %eax
-; NOOPT-NEXT:    je .LBB19_7
+; NOOPT-NEXT:    subl $50, %eax
+; NOOPT-NEXT:    je .LBB19_6
 ; NOOPT-NEXT:    jmp .LBB19_15
 ; NOOPT-NEXT:  .LBB19_15: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
+; NOOPT-NEXT:    subl $60, %eax
+; NOOPT-NEXT:    je .LBB19_7
+; NOOPT-NEXT:    jmp .LBB19_16
+; NOOPT-NEXT:  .LBB19_16: # %entry
+; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
 ; NOOPT-NEXT:    subl $70, %eax
 ; NOOPT-NEXT:    je .LBB19_7
-; NOOPT-NEXT:    jmp .LBB19_8
+; NOOPT-NEXT:    jmp .LBB19_9
 ; NOOPT-NEXT:  .LBB19_1: # %bb0
 ; NOOPT-NEXT:    xorl %edi, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB19_8
+; NOOPT-NEXT:    jmp .LBB19_9
 ; NOOPT-NEXT:  .LBB19_2: # %bb1
 ; NOOPT-NEXT:    movl $1, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB19_8
+; NOOPT-NEXT:    jmp .LBB19_9
 ; NOOPT-NEXT:  .LBB19_3: # %bb2
 ; NOOPT-NEXT:    movl $2, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB19_8
+; NOOPT-NEXT:    jmp .LBB19_9
 ; NOOPT-NEXT:  .LBB19_4: # %bb3
 ; NOOPT-NEXT:    movl $3, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB19_8
+; NOOPT-NEXT:    jmp .LBB19_9
 ; NOOPT-NEXT:  .LBB19_5: # %bb4
 ; NOOPT-NEXT:    movl $4, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB19_8
+; NOOPT-NEXT:    jmp .LBB19_9
 ; NOOPT-NEXT:  .LBB19_6: # %bb5
 ; NOOPT-NEXT:    movl $5, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB19_8
+; NOOPT-NEXT:    jmp .LBB19_9
 ; NOOPT-NEXT:  .LBB19_7: # %bb6
 ; NOOPT-NEXT:    movl $6, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:  .LBB19_8: # %return
+; NOOPT-NEXT:    jmp .LBB19_9
+; NOOPT-NEXT:  # %bb.8: # %bb7
+; NOOPT-NEXT:    .cfi_def_cfa_offset 8
+; NOOPT-NEXT:  .LBB19_9: # %return
+; NOOPT-NEXT:    .cfi_def_cfa_offset 16
 ; NOOPT-NEXT:    popq %rax
 ; NOOPT-NEXT:    .cfi_def_cfa_offset 8
 ; NOOPT-NEXT:    retq
@@ -2074,70 +2078,74 @@ define void @left_leaning_weight_balanced_tree2(i32 %x) {
 ; NOOPT-NEXT:    movl %edi, {{[-0-9]+}}(%r{{[sb]}}p) # 4-byte Spill
 ; NOOPT-NEXT:    testl %edi, %edi
 ; NOOPT-NEXT:    je .LBB20_1
-; NOOPT-NEXT:    jmp .LBB20_9
-; NOOPT-NEXT:  .LBB20_9: # %entry
-; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $10, %eax
-; NOOPT-NEXT:    je .LBB20_2
 ; NOOPT-NEXT:    jmp .LBB20_10
 ; NOOPT-NEXT:  .LBB20_10: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $20, %eax
-; NOOPT-NEXT:    je .LBB20_3
+; NOOPT-NEXT:    subl $10, %eax
+; NOOPT-NEXT:    je .LBB20_2
 ; NOOPT-NEXT:    jmp .LBB20_11
 ; NOOPT-NEXT:  .LBB20_11: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $30, %eax
-; NOOPT-NEXT:    je .LBB20_4
+; NOOPT-NEXT:    subl $20, %eax
+; NOOPT-NEXT:    je .LBB20_3
 ; NOOPT-NEXT:    jmp .LBB20_12
 ; NOOPT-NEXT:  .LBB20_12: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $40, %eax
-; NOOPT-NEXT:    je .LBB20_5
+; NOOPT-NEXT:    subl $30, %eax
+; NOOPT-NEXT:    je .LBB20_4
 ; NOOPT-NEXT:    jmp .LBB20_13
 ; NOOPT-NEXT:  .LBB20_13: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $50, %eax
-; NOOPT-NEXT:    je .LBB20_6
+; NOOPT-NEXT:    subl $40, %eax
+; NOOPT-NEXT:    je .LBB20_5
 ; NOOPT-NEXT:    jmp .LBB20_14
 ; NOOPT-NEXT:  .LBB20_14: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $60, %eax
-; NOOPT-NEXT:    je .LBB20_7
+; NOOPT-NEXT:    subl $50, %eax
+; NOOPT-NEXT:    je .LBB20_6
 ; NOOPT-NEXT:    jmp .LBB20_15
 ; NOOPT-NEXT:  .LBB20_15: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
+; NOOPT-NEXT:    subl $60, %eax
+; NOOPT-NEXT:    je .LBB20_7
+; NOOPT-NEXT:    jmp .LBB20_16
+; NOOPT-NEXT:  .LBB20_16: # %entry
+; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
 ; NOOPT-NEXT:    subl $70, %eax
 ; NOOPT-NEXT:    je .LBB20_7
-; NOOPT-NEXT:    jmp .LBB20_8
+; NOOPT-NEXT:    jmp .LBB20_9
 ; NOOPT-NEXT:  .LBB20_1: # %bb0
 ; NOOPT-NEXT:    xorl %edi, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB20_8
+; NOOPT-NEXT:    jmp .LBB20_9
 ; NOOPT-NEXT:  .LBB20_2: # %bb1
 ; NOOPT-NEXT:    movl $1, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB20_8
+; NOOPT-NEXT:    jmp .LBB20_9
 ; NOOPT-NEXT:  .LBB20_3: # %bb2
 ; NOOPT-NEXT:    movl $2, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB20_8
+; NOOPT-NEXT:    jmp .LBB20_9
 ; NOOPT-NEXT:  .LBB20_4: # %bb3
 ; NOOPT-NEXT:    movl $3, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB20_8
+; NOOPT-NEXT:    jmp .LBB20_9
 ; NOOPT-NEXT:  .LBB20_5: # %bb4
 ; NOOPT-NEXT:    movl $4, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB20_8
+; NOOPT-NEXT:    jmp .LBB20_9
 ; NOOPT-NEXT:  .LBB20_6: # %bb5
 ; NOOPT-NEXT:    movl $5, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB20_8
+; NOOPT-NEXT:    jmp .LBB20_9
 ; NOOPT-NEXT:  .LBB20_7: # %bb6
 ; NOOPT-NEXT:    movl $6, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:  .LBB20_8: # %return
+; NOOPT-NEXT:    jmp .LBB20_9
+; NOOPT-NEXT:  # %bb.8: # %bb7
+; NOOPT-NEXT:    .cfi_def_cfa_offset 8
+; NOOPT-NEXT:  .LBB20_9: # %return
+; NOOPT-NEXT:    .cfi_def_cfa_offset 16
 ; NOOPT-NEXT:    popq %rax
 ; NOOPT-NEXT:    .cfi_def_cfa_offset 8
 ; NOOPT-NEXT:    retq
@@ -2231,70 +2239,74 @@ define void @right_leaning_weight_balanced_tree(i32 %x) {
 ; NOOPT-NEXT:    movl %edi, {{[-0-9]+}}(%r{{[sb]}}p) # 4-byte Spill
 ; NOOPT-NEXT:    testl %edi, %edi
 ; NOOPT-NEXT:    je .LBB21_1
-; NOOPT-NEXT:    jmp .LBB21_9
-; NOOPT-NEXT:  .LBB21_9: # %entry
-; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $10, %eax
-; NOOPT-NEXT:    je .LBB21_2
 ; NOOPT-NEXT:    jmp .LBB21_10
 ; NOOPT-NEXT:  .LBB21_10: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $20, %eax
-; NOOPT-NEXT:    je .LBB21_3
+; NOOPT-NEXT:    subl $10, %eax
+; NOOPT-NEXT:    je .LBB21_2
 ; NOOPT-NEXT:    jmp .LBB21_11
 ; NOOPT-NEXT:  .LBB21_11: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $30, %eax
-; NOOPT-NEXT:    je .LBB21_4
+; NOOPT-NEXT:    subl $20, %eax
+; NOOPT-NEXT:    je .LBB21_3
 ; NOOPT-NEXT:    jmp .LBB21_12
 ; NOOPT-NEXT:  .LBB21_12: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $40, %eax
-; NOOPT-NEXT:    je .LBB21_5
+; NOOPT-NEXT:    subl $30, %eax
+; NOOPT-NEXT:    je .LBB21_4
 ; NOOPT-NEXT:    jmp .LBB21_13
 ; NOOPT-NEXT:  .LBB21_13: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $50, %eax
-; NOOPT-NEXT:    je .LBB21_6
+; NOOPT-NEXT:    subl $40, %eax
+; NOOPT-NEXT:    je .LBB21_5
 ; NOOPT-NEXT:    jmp .LBB21_14
 ; NOOPT-NEXT:  .LBB21_14: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
-; NOOPT-NEXT:    subl $60, %eax
-; NOOPT-NEXT:    je .LBB21_7
+; NOOPT-NEXT:    subl $50, %eax
+; NOOPT-NEXT:    je .LBB21_6
 ; NOOPT-NEXT:    jmp .LBB21_15
 ; NOOPT-NEXT:  .LBB21_15: # %entry
 ; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
+; NOOPT-NEXT:    subl $60, %eax
+; NOOPT-NEXT:    je .LBB21_7
+; NOOPT-NEXT:    jmp .LBB21_16
+; NOOPT-NEXT:  .LBB21_16: # %entry
+; NOOPT-NEXT:    movl {{[-0-9]+}}(%r{{[sb]}}p), %eax # 4-byte Reload
 ; NOOPT-NEXT:    subl $70, %eax
 ; NOOPT-NEXT:    je .LBB21_7
-; NOOPT-NEXT:    jmp .LBB21_8
+; NOOPT-NEXT:    jmp .LBB21_9
 ; NOOPT-NEXT:  .LBB21_1: # %bb0
 ; NOOPT-NEXT:    xorl %edi, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB21_8
+; NOOPT-NEXT:    jmp .LBB21_9
 ; NOOPT-NEXT:  .LBB21_2: # %bb1
 ; NOOPT-NEXT:    movl $1, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB21_8
+; NOOPT-NEXT:    jmp .LBB21_9
 ; NOOPT-NEXT:  .LBB21_3: # %bb2
 ; NOOPT-NEXT:    movl $2, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB21_8
+; NOOPT-NEXT:    jmp .LBB21_9
 ; NOOPT-NEXT:  .LBB21_4: # %bb3
 ; NOOPT-NEXT:    movl $3, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB21_8
+; NOOPT-NEXT:    jmp .LBB21_9
 ; NOOPT-NEXT:  .LBB21_5: # %bb4
 ; NOOPT-NEXT:    movl $4, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB21_8
+; NOOPT-NEXT:    jmp .LBB21_9
 ; NOOPT-NEXT:  .LBB21_6: # %bb5
 ; NOOPT-NEXT:    movl $5, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:    jmp .LBB21_8
+; NOOPT-NEXT:    jmp .LBB21_9
 ; NOOPT-NEXT:  .LBB21_7: # %bb6
 ; NOOPT-NEXT:    movl $6, %edi
 ; NOOPT-NEXT:    callq g@PLT
-; NOOPT-NEXT:  .LBB21_8: # %return
+; NOOPT-NEXT:    jmp .LBB21_9
+; NOOPT-NEXT:  # %bb.8: # %bb7
+; NOOPT-NEXT:    .cfi_def_cfa_offset 8
+; NOOPT-NEXT:  .LBB21_9: # %return
+; NOOPT-NEXT:    .cfi_def_cfa_offset 16
 ; NOOPT-NEXT:    popq %rax
 ; NOOPT-NEXT:    .cfi_def_cfa_offset 8
 ; NOOPT-NEXT:    retq
